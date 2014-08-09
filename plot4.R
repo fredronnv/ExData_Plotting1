@@ -1,31 +1,22 @@
-library("data.table")
-data <- fread("household_power_consumption.txt", na.strings="?", sep=';', select=c('Date', 'Time', 'Global_active_power', 'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3', 'Voltage', 'Global_reactive_power'), showProgress = TRUE)
-interesting_dates <- c('1/2/2007', '2/2/2007')
+# Multiple plots in one, 2x2
 
+source("read_data.R")
+use_data <- read_data()
 png(filename = "plot4.png",
     width = 480, height = 480)
-
-use_data <- subset(data, Date %in% interesting_dates)
-use_data <- transform(use_data, Sub_metering_1 = as.numeric(Sub_metering_1), Sub_metering_2 = as.numeric(Sub_metering_2), Sub_metering_3 = as.numeric(Sub_metering_3), Voltage = as.numeric(Voltage), Global_reactive_power = as.numeric(Global_reactive_power), TS = as.POSIXct(strptime(paste(Date, Time, sep=" "), format='%d/%m/%Y %H:%M:%S')))
-
 par(mfrow=c(2,2))
-
 plot(use_data$TS, use_data$Global_active_power,
  type = 'l',
  xlab = '',
  main = '',
  ylab = 'Global Active Power'
 )
-
 plot(use_data$TS, use_data$Voltage,
  type = 'l',
  xlab = 'datetime',
  main = '',
  ylab = 'Voltage'
 )
-
-
-
 plot(use_data$TS, use_data$Sub_metering_1,
  col  = 'black',
  type = 'l',
